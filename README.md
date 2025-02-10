@@ -1,51 +1,147 @@
-# Real_Estate_Price_Prediction_Website
-This repository houses a machine learning model, now deployed as a web application, to predict property prices in Bangalore. The model leverages real estate data and various features to provide accurate estimates.
+# Bengaluru House Prices Prediction Model - Stage 1
 
-Problem Statement
+## Overview
 
-Real-world Problem
-The real estate market, especially in metropolitan cities like Bangalore, is highly dynamic and complex. Traditional methods of property valuation often rely on expert opinions and historical data, which can be subjective and time-consuming. This can lead to inaccurate valuations, hindering informed decision-making for both buyers and sellers.
+This project aims to predict house prices in Bengaluru using machine learning. The model considers factors such as square footage, number of bedrooms, bathrooms, and location.
 
-Significance
+## Dataset
 
-Informed Decision Making: Accurate property price predictions empower buyers and sellers to make informed decisions.
-Market Transparency: By providing reliable price estimates, the model can contribute to a more transparent and efficient real estate market.
-Risk Mitigation: Accurate valuations can help mitigate financial risks associated with real estate investments.
-Investment Strategies: Investors can leverage the model to identify potential investment opportunities and optimise their portfolios.
-Policy Making: Urban planners and policymakers can use the model to analyze market trends and inform urban development strategies.
+The dataset used for training is `bengaluru_house_prices.csv`, which contains real estate data from Bengaluru, including property attributes and prices.
 
-Source: Kaggle
+## Dependencies
 
-Key Features:
+Before running the code, install the necessary Python libraries:
 
-area_type: Indicates the type of area (e.g., Super built-up Area, Carpet Area).
-availability: Specifies the availability status of the property (e.g., Ready To Move, 18-Dec).
-location: The location of the property.
-size: The size of the property in square feet.
-society: The name of the society or residential complex.
-total_sqft: The total square footage of the property.
-bath: The number of bathrooms.
-balcony: The number of balconies.
+```sh
+pip install numpy pandas matplotlib scikit-learn flask
+```
 
-Target Variable:
-price: The price of the property.
+## Data Preprocessing
 
-Data Preprocessing:
-Outlier Removal:A custom function remove_bhk_outliers was used to identify and remove outliers based on the price per square foot for each BHK category within a specific location.
-This step ensured that the model is trained on realistic and reliable data.
+- Missing and incorrect values are handled using helper functions.
+- The `total_sqft` column is cleaned and converted to numerical values.
+- Locations with fewer occurrences are grouped into an "other" category.
+- Outliers in `price_per_sqft` and `bhk` categories are removed to improve model accuracy.
 
-Feature Engineering:
-Price per Square Foot: This feature was calculated by dividing the price by the total square footage to normalize the price across different property sizes.
-Location One-Hot Encoding: The categorical location feature was one-hot encoded to create binary features for each unique location.
+## Exploratory Data Analysis (EDA)
 
-Model Architecture Overview
+- The dataset is analyzed using `matplotlib` to visualize patterns.
+- Scatter plots are used to compare property prices based on BHK and square footage.
 
-The provided code snippet utilises a technique called GridSearchCV to find the best performing model among three different regression algorithms:
-Linear Regression
-Lasso Regression
-Decision Tree Regression
+## Model Training
 
-The code defines a dictionary named algos that stores information about each model. This includes:
-model: An instance of the specific scikit-learn model class (e.g., LinearRegression()).
-params: A dictionary containing hyperparameters to be tuned during GridSearchCV. These hyperparameters control the behaviour of the model.
+- The dataset is split into training and testing sets using `train_test_split`.
+- Various models are evaluated using `GridSearchCV`:
+  - **Linear Regression**
+  - **Lasso Regression**
+  - **Decision Tree Regressor**
+
+## Model Evaluation
+
+- `cross_val_score` is used for model validation.
+- The best model is selected based on `GridSearchCV` results.
+- The model achieves an accuracy of approximately 84.5%.
+
+## Price Prediction Function
+
+A function `predict_price()` is implemented to estimate house prices based on user input.
+
+## Saving the Model
+
+The trained model is saved as a pickle file (`bangalore_home_prices_model.pickle`) for future use.
+
+---
+
+# Stage 2 - Web Integration
+
+## Web Application Development
+
+To deploy the model as a web application, a front-end interface is developed using:
+
+- **HTML** for structure
+- **CSS** for styling
+- **JavaScript (jQuery)** for interaction
+
+A **Flask** backend (`server.py`) is implemented to:
+
+- Serve the model predictions via API endpoints.
+- Fetch available location names dynamically.
+
+### Code Breakdown
+
+#### **Front-End (HTML, CSS, JavaScript)**
+
+- The UI consists of input fields for square footage, BHK, bathrooms, and location selection.
+- A button triggers the price estimation function via JavaScript.
+- jQuery is used to send data to the Flask API and display the estimated price dynamically.
+
+#### **Back-End (Flask API - server.py)**
+
+- Two main API endpoints:
+  - `/get_location_names`: Returns available location names for the drop-down menu.
+  - `/predict_home_price`: Accepts user input and returns the estimated price using the trained model.
+- The `util.py` script is used to load saved artifacts and make predictions.
+
+### Running the Web Application
+
+1. Start the Flask server:
+   ```sh
+   python server.py
+   ```
+2. Open `index.html` in a web browser.
+3. Enter property details and get an estimated price.
+
+---
+
+# Stage 3 - Deployment on AWS EC2
+
+## Deployment Process
+
+The web application is deployed on an Amazon EC2 instance to make it accessible online.
+
+### Steps:
+
+1. Launch an **EC2 Instance** (Ubuntu/Linux-based recommended).
+2. Install required dependencies:
+   ```sh
+   sudo apt update
+   sudo apt install python3-pip
+   pip install flask numpy pandas scikit-learn gunicorn
+   ```
+3. Transfer project files to the EC2 instance via **SCP** or **Git**.
+4. Run the Flask application using **Gunicorn**:
+   ```sh
+   gunicorn --bind 0.0.0.0:5000 server:app
+   ```
+5. Configure **Nginx** as a reverse proxy for better scalability and security.
+6. Obtain a public **Elastic IP** to access the application online.
+
+---
+
+# Stage 4 - Transforming into a Startup
+
+## Vision: AI-Powered Real Estate Advisory Platform
+
+This project has the potential to be developed into a **real estate tech startup**, offering AI-driven property valuation services. The goal is to provide accurate, real-time property price predictions to home buyers, sellers, and real estate agencies.
+
+### Key Features for a Startup Model:
+
+1. **Expanding Beyond Bengaluru**
+   - Scale the model to include real estate data from other major Indian cities and international markets.
+
+2. **User Profiles & Personalized Insights**
+   - Implement authentication so users can save searches and track market trends.
+
+3. **Real Estate Partner Integration**
+   - Provide an API service that integrates with real estate platforms like **99acres** and **MagicBricks** to offer instant property valuations.
+
+4. **AI-Driven Market Insights**
+   - Incorporate external data sources such as **economic trends, infrastructure projects, and mortgage rates** to enhance pricing predictions.
+
+5. **Monetization Strategies**
+   - Offer **premium subscriptions** for advanced analytics.
+   - Partner with **real estate agencies** for lead generation.
+   - Provide **customized reports** for investors and property developers.
+
+By implementing these enhancements, this project can evolve into a fully operational **AI-driven real estate advisory platform**, disrupting the traditional property market and offering valuable insights to buyers, sellers, and investors.
 
