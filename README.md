@@ -99,6 +99,9 @@ A **Flask** backend (`server.py`) is implemented to:
 
 The web application is deployed on an Amazon EC2 instance  and the url is http://ec2-13-60-58-76.eu-north-1.compute.amazonaws.com to make it accessible online.
 
+![image](https://github.com/user-attachments/assets/2d613227-a1cb-428d-851f-5e199921f976)
+
+
 ### Steps:
 
 1. Launch an **EC2 Instance** (Ubuntu/Linux-based recommended).
